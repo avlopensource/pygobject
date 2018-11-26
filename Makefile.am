@@ -61,7 +61,7 @@ MAINTAINERCLEANFILES = \
 BUILT_EXTRA_DIST = 		\
 	ChangeLog
 
-INCLUDES = -I$(top_srcdir)/gobject $(PYTHON_INCLUDES) $(GLIB_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/gobject $(PYTHON_INCLUDES) $(GLIB_CFLAGS)
 
 # pkg-config files
 pkgconfigdir = $(libdir)/pkgconfig
