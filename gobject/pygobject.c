@@ -483,6 +483,24 @@ pyg_props_descr_descr_get(PyObject *self, PyObject *obj, PyObject *type)
     return (PyObject *) gprops;
 }
 
+PyTypeObject *
+pygobject_register_heap_class(PyObject *dict, const gchar *type_name,
+                              GType gtype, PyTypeObject *type_template,
+                              PyObject *static_bases)
+{
+    PyHeapTypeObject *res = (PyHeapTypeObject *)PyType_GenericAlloc(PyGObject_MetaType, 0);
+    res->ht_type = *type_template;
+    res->ht_type.tp_flags |= Py_TPFLAGS_HEAPTYPE;
+
+    res->ht_name = PyUnicode_FromString(type_template->tp_name);
+    res->ht_qualname = res->ht_name;
+    Py_INCREF(res->ht_qualname);
+
+    pygobject_register_class(dict, type_name, gtype, &res->ht_type, static_bases);
+
+    return (PyTypeObject *)res;
+}
+
 /**
  * pygobject_register_class:
  * @dict: the module dictionary.  A reference to the type will be stored here.

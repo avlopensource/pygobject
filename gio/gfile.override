@@ -62,7 +62,7 @@ _wrap__install_file_meta(PyObject *self, PyObject *args)
 	return NULL;
 
     Py_INCREF(metaclass);
-    PyGFile_Type.ob_type = (PyTypeObject*)metaclass;
+    Py_TYPE((PyObject *)&PyGFile_Type) = (PyTypeObject*)metaclass;
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -810,12 +810,12 @@ pyg_strv_from_pyobject(PyObject *value, const char *exc_msg)
 	PyObject* item = PySequence_Fast_GET_ITEM(fast_seq, i);
 	const char *s;
 
-	if (!PyString_Check(item)) {
+	if (!PyUnicode_Check(item)) {
 	    PyErr_SetString(PyExc_TypeError, exc_msg);
 	    goto failure;
 	}
 
-	s = PyString_AsString(item);
+	s = PyUnicode_AsUTF8(item);
 	if (s == NULL)
 	    goto failure;
 		
@@ -868,13 +868,13 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
     case G_FILE_ATTRIBUTE_TYPE_STRING:
 	{
 	    char* s;
-	    if (!PyString_Check(value)) {
+	    if (!PyUnicode_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be a str when type is FILE_ATTRIBUTE_TYPE_STRING");
 		return NULL;
 	    }
 
-	    s = PyString_AsString(value);
+	    s = PyUnicode_AsUTF8(value);
 	    if (s == NULL)
 		return NULL;
 
@@ -887,13 +887,13 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
     case G_FILE_ATTRIBUTE_TYPE_BYTE_STRING:
 	{
 	    char* s;
-	    if (!PyString_Check(value)) {
+	    if (!PyBytes_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be a bytes instance when type is FILE_ATTRIBUTE_TYPE_BYTE_STRING");
 		return NULL;
 	    }
 
-	    s = PyString_AsString(value);
+	    s = PyBytes_AsString(value);
 	    if (s == NULL)
 		return NULL;
 
@@ -953,7 +953,7 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
 	{
 	    guint32 intval;
 
-	    if (!PyInt_Check(value) && !PyLong_Check(value)) {
+	    if (!PyLong_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be an int when type is FILE_ATTRIBUTE_TYPE_UINT32");
 		return NULL;
@@ -973,13 +973,13 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
 	{
 	    gint32 intval;
 
-	    if (!PyInt_Check(value)) {
+	    if (!PyLong_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be an int when type is FILE_ATTRIBUTE_TYPE_INT32");
 		return NULL;
 	    }
 		
-	    intval = PyInt_AsLong(value);
+	    intval = PyLong_AsLong(value);
 	    if (intval == -1 && PyErr_Occurred())
 		return NULL;
 
@@ -993,7 +993,7 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
 	{
 	    guint64 intval;
 
-	    if (!PyInt_Check(value) && !PyLong_Check(value)) {
+	    if (!PyLong_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be a long int when type is FILE_ATTRIBUTE_TYPE_UINT64");
 		return NULL;
@@ -1013,7 +1013,7 @@ _wrap_g_file_set_attribute(PyGObject *self, PyObject *args, PyObject *kwargs)
 	{
 	    gint64 intval;
 
-	    if (!PyInt_Check(value) && !PyLong_Check(value)) {
+	    if (!PyLong_Check(value)) {
 		PyErr_Format(PyExc_TypeError, 
 			     "set_attribute value must be a long int when type is FILE_ATTRIBUTE_TYPE_INT64");
 		return NULL;
@@ -1532,7 +1532,7 @@ _wrap_g_file_replace_contents(PyGObject *self, PyObject *args, PyObject *kwargs)
     PyObject *py_ret;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     "s#|zbOO:File.replace_contents",
+                                     "y#|zbOO:File.replace_contents",
                                      kwlist,
                                      &contents,
                                      &length,
@@ -1563,7 +1563,7 @@ _wrap_g_file_replace_contents(PyGObject *self, PyObject *args, PyObject *kwargs)
         return NULL;
 
     if (ret) {
-        py_ret = PyString_FromString(new_etag);
+        py_ret = PyUnicode_FromString(new_etag);
     } else {
         py_ret = Py_None;
         Py_INCREF(py_ret);
@@ -1599,7 +1599,7 @@ _wrap_g_file_replace_contents_finish(PyGObject *self, PyObject *args, PyObject *
         return NULL;
 
     if (ret) {
-        py_ret = PyString_FromString(etag_out);
+        py_ret = PyUnicode_FromString(etag_out);
         return py_ret;
     } else {
         py_ret = Py_None;
@@ -1719,13 +1719,13 @@ _wrap_g_file_tp_repr(PyGObject *self)
     PyObject *result;
 
     if (uri) {
-	representation = g_strdup_printf("<%s at %p: %s>", self->ob_type->tp_name, self, uri);
+	representation = g_strdup_printf("<%s at %p: %s>", Py_TYPE(self)->tp_name, self, uri);
 	g_free(uri);
     }
     else
-	representation = g_strdup_printf("<%s at %p: UNKNOWN URI>", self->ob_type->tp_name, self);
+	representation = g_strdup_printf("<%s at %p: UNKNOWN URI>", Py_TYPE(self)->tp_name, self);
 
-    result = PyString_FromString(representation);
+    result = PyUnicode_FromString(representation);
     g_free(representation);
     return result;
 }

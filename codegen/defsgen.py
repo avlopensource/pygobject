@@ -86,7 +86,8 @@ import os
 import re, string
 import sys
 import ctypes
-import defsparser
+from . import defsparser
+from functools import reduce
 
 #------------------ utility defs -----------------
 
@@ -409,7 +410,7 @@ class DefsWriter:
     def write_untyped_enum_defs(self, fp):
         fp.write(';; Untyped enumerations and flags ...\n\n')
         filter = self._c_names
-        for cname, (isflags, entries) in self.defs['untypedenums'].items():
+        for cname, (isflags, entries) in list(self.defs['untypedenums'].items()):
             if filter and cname in filter: continue
             module, name = split_prefix(cname, self.prefix, self.use_prefix)
             if isflags:
@@ -656,10 +657,10 @@ def main(args):
                 defines[nameval[0]] = None
 
     if not args[0:1]:
-        print 'Must specify at least one input file name'
+        print('Must specify at least one input file name')
         return -1
     if not modulelibs:
-        print 'Must specify one or more modulelib names'
+        print('Must specify one or more modulelib names')
         return -1
 
     # load the gobject and module libraries and init the gtype system
@@ -723,15 +724,15 @@ def main(args):
     if onlyobjdefs or all:
         dw.write_obj_defs(types)
         if separate:
-            print "Wrote object defs to %s-types.defs" % separate
+            print("Wrote object defs to %s-types.defs" % separate)
     if onlyenums or all:
         dw.write_enum_defs(types)
         if separate:
-            print "Wrote enum and flags defs to %s-types.defs" % separate
+            print("Wrote enum and flags defs to %s-types.defs" % separate)
     if onlyvirtuals or all:
         dw.write_func_defs(args, onlyvirtuals)
         if separate:
-            print "Wrote function and virtual defs to %s.defs" % separate
+            print("Wrote function and virtual defs to %s.defs" % separate)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

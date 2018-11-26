@@ -89,6 +89,8 @@ struct _PyGObject_Functions {
      * All field names in here are considered private,
      * use the macros below instead, which provides stability
      */
+    PyTypeObject *(* register_heap_class)(PyObject *dict, const gchar *class_name,
+                                          GType gtype, PyTypeObject *type_template, PyObject *bases);
     void (* register_class)(PyObject *dict, const gchar *class_name,
 			    GType gtype, PyTypeObject *type, PyObject *bases);
     void (* register_wrapper)(PyObject *self);
@@ -209,6 +211,7 @@ extern struct _PyGObject_Functions *_PyGObject_API;
 struct _PyGObject_Functions *_PyGObject_API;
 #endif
 
+#define pygobject_register_heap_class    (_PyGObject_API->register_heap_class)
 #define pygobject_register_class    (_PyGObject_API->register_class)
 #define pygobject_register_wrapper  (_PyGObject_API->register_wrapper)
 /* This is deprecated, sinkfuncs are not needed anymore */

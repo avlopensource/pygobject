@@ -105,6 +105,7 @@
   (parent "GObject")
   (c-name "GAppLaunchContext")
   (gtype-id "G_TYPE_APP_LAUNCH_CONTEXT")
+  (heaptype #t)
 )
 
 (define-object Cancellable
@@ -112,6 +113,7 @@
   (parent "GObject")
   (c-name "GCancellable")
   (gtype-id "G_TYPE_CANCELLABLE")
+  (heaptype #t)
 )
 
 (define-object Emblem
@@ -196,6 +198,7 @@
   (parent "GInputStream")
   (c-name "GMemoryInputStream")
   (gtype-id "G_TYPE_MEMORY_INPUT_STREAM")
+  (heaptype #t)
 )
 
 (define-object MountOperation
@@ -203,6 +206,7 @@
   (parent "GObject")
   (c-name "GMountOperation")
   (gtype-id "G_TYPE_MOUNT_OPERATION")
+  (heaptype #t)
 )
 
 (define-object InetAddress
@@ -210,6 +214,7 @@
   (parent "GObject")
   (c-name "GInetAddress")
   (gtype-id "G_TYPE_INET_ADDRESS")
+  (heaptype #t)
 )
 
 (define-object InetSocketAddress
@@ -217,6 +222,7 @@
   (parent "GSocketAddress")
   (c-name "GInetSocketAddress")
   (gtype-id "G_TYPE_INET_SOCKET_ADDRESS")
+  (heaptype #t)
 )
 
 (define-object NetworkAddress
@@ -224,6 +230,7 @@
   (parent "GObject")
   (c-name "GNetworkAddress")
   (gtype-id "G_TYPE_NETWORK_ADDRESS")
+  (heaptype #t)
 )
 
 (define-object NetworkService
@@ -231,6 +238,7 @@
   (parent "GObject")
   (c-name "GNetworkService")
   (gtype-id "G_TYPE_NETWORK_SERVICE")
+  (heaptype #t)
 )
 
 (define-object Resolver
@@ -238,6 +246,7 @@
   (parent "GObject")
   (c-name "GResolver")
   (gtype-id "G_TYPE_RESOLVER")
+  (heaptype #t)
 )
 
 (define-object Socket
@@ -245,6 +254,7 @@
   (parent "GObject")
   (c-name "GSocket")
   (gtype-id "G_TYPE_SOCKET")
+  (heaptype #t)
 )
 
 (define-object SocketAddress
@@ -252,6 +262,7 @@
   (parent "GObject")
   (c-name "GSocketAddress")
   (gtype-id "G_TYPE_SOCKET_ADDRESS")
+  (heaptype #t)
 )
 
 (define-object SocketAddressEnumerator
@@ -329,6 +340,7 @@
   (parent "GOutputStream")
   (c-name "GMemoryOutputStream")
   (gtype-id "G_TYPE_MEMORY_OUTPUT_STREAM")
+  (heaptype #t)
 )
 
 (define-object FilterOutputStream

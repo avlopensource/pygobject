@@ -74,7 +74,7 @@ pyg_register_interface(PyObject *dict, const gchar *class_name,
     type->tp_base = &PyGInterface_Type;
 
     if (PyType_Ready(type) < 0) {
-        g_warning("could not ready `%s'", type->tp_name);
+        g_warning("could not ready `%s'", class_name);
         return;
     }
 

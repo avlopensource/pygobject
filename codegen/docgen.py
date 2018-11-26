@@ -4,10 +4,10 @@ import os
 import re
 import sys
 
-import definitions
-import defsparser
-import docextract
-import override
+from . import definitions
+from . import defsparser
+from . import docextract
+from . import override
 
 
 class Node:
@@ -181,8 +181,8 @@ class DocWriter:
             self.close_section()
 
         methods = self.parser.find_methods(obj_def)
-        methods = filter(lambda meth, self=self:
-                         not self.overrides.is_ignored(meth.c_name), methods)
+        methods = list(filter(lambda meth, self=self:
+                         not self.overrides.is_ignored(meth.c_name), methods))
         if methods:
             self.write_heading('Methods')
             for method in methods:
@@ -731,7 +731,7 @@ def main(args):
         opts, args = getopt.getopt(args[1:], "d:s:o:",
                                    ["defs-file=", "override=", "source-dir=",
                                     "output-prefix="])
-    except getopt.error, e:
+    except getopt.error as e:
         sys.stderr.write('docgen.py: %s\n' % e)
         sys.stderr.write(
             'usage: docgen.py -d file.defs [-s /src/dir] [-o output-prefix]\n')

@@ -12,7 +12,7 @@ m4_define(python3_min_ver, 3.1)
 dnl the pygobject version number
 m4_define(pygobject_major_version, 2)
 m4_define(pygobject_minor_version, 28)
-m4_define(pygobject_micro_version, 7)
+m4_define(pygobject_micro_version, 8)
 m4_define(pygobject_version, pygobject_major_version.pygobject_minor_version.pygobject_micro_version)
 
 dnl versions of packages we require ...
@@ -212,7 +212,7 @@ AC_SUBST(GIO_LIBS)
 
 # Do not build GIO if the python version >= 3.0
 # We use GI to access GIO in python 3
-AM_CONDITIONAL(BUILD_GIO, test $have_gio = true -a $build_py3k = false)
+AM_CONDITIONAL(BUILD_GIO, test $have_gio = true)
 
 if test -n "$export_dynamic"; then
   GIO_LIBS=`echo $GIO_LIBS | sed -e "s/$export_dynamic//"`
@@ -262,8 +262,7 @@ INTROSPECTION_COMPILER=`$PKG_CONFIG --variable=g_ir_compiler gobject-introspecti
 AC_SUBST(INTROSPECTION_SCANNER)
 AC_SUBST(INTROSPECTION_COMPILER)
 
-dnl Do not install codegen for Python 3.
-AM_CONDITIONAL(ENABLE_CODEGEN, test $build_py3k = false)
+AM_CONDITIONAL(ENABLE_CODEGEN, test false = false)
 
 dnl add required cflags ...
 if test "x$GCC" = "xyes"; then
@@ -297,11 +296,9 @@ AC_CONFIG_FILES(
   tests/Makefile
   PKG-INFO)
 
-if test $build_py3k = false; then
-  AC_CONFIG_FILES(
-    codegen/Makefile
-    codegen/pygobject-codegen-2.0)
-fi
+AC_CONFIG_FILES(
+  codegen/Makefile
+  codegen/pygobject-codegen-2.0)
 
 AC_OUTPUT
 

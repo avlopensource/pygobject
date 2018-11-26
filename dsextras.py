@@ -403,6 +403,8 @@ class Template(object):
     def __init__(self, override, output, defs, prefix,
                  register=[], load_types=None, py_ssize_t_clean=False):
 
+        prefix = prefix.split('.')[-1].lstrip('_')
+
         self.override = override
         self.output = output
         self.prefix = prefix

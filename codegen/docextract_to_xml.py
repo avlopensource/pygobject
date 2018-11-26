@@ -11,7 +11,7 @@ import re
 import string
 import sys
 
-import docextract
+from . import docextract
 
 def usage():
     sys.stderr.write('usage: docextract_to_xml.py ' +
@@ -53,15 +53,15 @@ def escape_text(unescaped_text):
 
 def print_annotations(annotations):
     for annotation in annotations:
-        print "<annotation name=" + annotation[0] +  ">" + \
-                escape_text(annotation[1]) + "</annotation>"
+        print("<annotation name=" + annotation[0] +  ">" + \
+                escape_text(annotation[1]) + "</annotation>")
 
 if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:s:o:api",
                                    ["source-dir=", "with-annotations",
                                      "with-properties", "with-signals"])
-    except getopt.error, e:
+    except getopt.error as e:
         sys.stderr.write('docextract_to_xml.py: %s\n' % e)
         usage()
     source_dirs = []
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     if docs:
 
-        print "<root>"
+        print("<root>")
 
         for name, value in sorted(docs.items()):
             # Get the type of comment block ('function', 'signal' or
@@ -101,39 +101,39 @@ if __name__ == '__main__':
             elif block_type == 'property' and not with_properties:
                 continue
 
-            print "<" + block_type + " name=\"" + escape_text(name) + "\">"
+            print("<" + block_type + " name=\"" + escape_text(name) + "\">")
 
-            print "<description>"
-            print escape_text(value.get_description())
-            print "</description>"
+            print("<description>")
+            print(escape_text(value.get_description()))
+            print("</description>")
 
             # Loop through the parameters if not dealing with a property:
             if block_type != 'property':
-                print "<parameters>"
+                print("<parameters>")
                 for name, description, annotations in value.params:
-                        print "<parameter name=\"" + escape_text(name) + "\">"
-                        print "<parameter_description>" + escape_text(description) + "</parameter_description>"
+                        print("<parameter name=\"" + escape_text(name) + "\">")
+                        print("<parameter_description>" + escape_text(description) + "</parameter_description>")
 
                         if with_annotations:
                             print_annotations(annotations)
 
-                        print "</parameter>"
+                        print("</parameter>")
 
-                print "</parameters>"
+                print("</parameters>")
 
                 # Show the return-type (also if not dealing with a property):
                 if with_annotations:
-                    print "<return>"
-                    print "<return_description>" + escape_text(value.ret[0]) + \
-                            "</return_description>"
+                    print("<return>")
+                    print("<return_description>" + escape_text(value.ret[0]) + \
+                            "</return_description>")
                     print_annotations(value.ret[1])
-                    print "</return>"
+                    print("</return>")
                 else:
-                    print "<return>" + escape_text(value.ret[0]) + "</return>"
+                    print("<return>" + escape_text(value.ret[0]) + "</return>")
 
             if with_annotations:
                 print_annotations(value.get_annotations())
 
-            print "</" + block_type + ">\n"
+            print("</" + block_type + ">\n")
 
-        print "</root>"
+        print("</root>")

@@ -40,8 +40,11 @@ pyg_enum_val_new(PyObject* subclass, GType gtype, PyObject *intval)
     PyObject *item;
     
 #if PY_VERSION_HEX >= 0x03000000
-    item = PyObject_CallMethod((PyObject*)&PyLong_Type, "__new__", "OO",
-                               subclass, intval);
+    PyObject *args = Py_BuildValue("(O)", intval);
+    item = PyLong_Type.tp_new((PyTypeObject *)subclass, args, NULL);
+    Py_DECREF(args);
+    if (!item)
+      PyErr_Print();
 #else
     item = ((PyTypeObject *)subclass)->tp_alloc((PyTypeObject *)subclass, 0);
     ((PyIntObject*)item)->ob_ival = PyInt_AS_LONG(intval);
@@ -228,7 +231,7 @@ pyg_enum_add (PyObject *   module,
                                  instance_dict);
     Py_DECREF(instance_dict);
     if (!stub) {
-	PyErr_SetString(PyExc_RuntimeError, "can't create const");
+	/* PyErr_SetString(PyExc_RuntimeError, "can't create const"); */
 	pyglib_gil_state_release(state);
 	return NULL;
     }

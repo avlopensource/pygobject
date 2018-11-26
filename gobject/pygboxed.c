@@ -142,7 +142,7 @@ pyg_register_boxed(PyObject *dict, const gchar *class_name,
     type->tp_base = &PyGBoxed_Type;
 
     if (PyType_Ready(type) < 0) {
-	g_warning("could not get type `%s' ready", type->tp_name);
+	g_warning("could not get type `%s' ready", class_name);
 	return;
     }
 

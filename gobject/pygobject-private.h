@@ -149,6 +149,10 @@ struct _PyGObjectData {
     GSList *closures;
 };
 
+PyTypeObject *pygobject_register_heap_class (PyObject *dict,
+					  const gchar *type_name,
+					  GType gtype, PyTypeObject *type_template,
+					  PyObject *bases);
 void          pygobject_register_class   (PyObject *dict,
 					  const gchar *type_name,
 					  GType gtype, PyTypeObject *type,

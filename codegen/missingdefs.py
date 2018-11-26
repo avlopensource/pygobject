@@ -2,7 +2,7 @@
 # -*- Mode: Python; py-indent-offset: 4 -*-
 
 import sys
-import defsparser
+from . import defsparser
 
 if len(sys.argv) < 3:
     sys.stderr.write("Usage: missingdefs.py generated-defs old-defs\n")

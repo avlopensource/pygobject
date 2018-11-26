@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- Mode: Python; py-indent-offset: 4 -*-
-from __future__ import generators
+
 
 import string
-from cStringIO import StringIO
+from io import StringIO
 
 class error(Exception):
     def __init__(self, filename, lineno, msg):
@@ -16,11 +16,11 @@ class error(Exception):
 
 trans = [' '] * 256
 for i in range(256):
-    if chr(i) in string.letters + string.digits + '_':
+    if chr(i) in string.ascii_letters + string.digits + '_':
         trans[i] = chr(i)
     else:
         trans[i] = '_'
-trans = string.join(trans, '')
+trans = ''.join(trans)
 
 def parse(filename):
     if isinstance(filename, str):
@@ -140,4 +140,4 @@ if __name__ == '__main__':
         fp = StringIO(_testString)
     statements = parse(fp)
     for s in statements:
-        print `s`
+        print(repr(s))

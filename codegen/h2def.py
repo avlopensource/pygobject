@@ -71,7 +71,7 @@ import re
 import string
 import sys
 
-import defsparser
+from . import defsparser
 
 # ------------------ Create typecodes from typenames ---------
 
@@ -361,7 +361,7 @@ class DefsWriter:
         if defsfilter:
             filter = defsparser.DefsParser(defsfilter)
             filter.startParsing()
-            for func in filter.functions + filter.methods.values():
+            for func in filter.functions + list(filter.methods.values()):
                 self._functions[func.c_name] = func
             for obj in filter.objects + filter.boxes + filter.interfaces:
                 self._objects[obj.c_name] = obj
@@ -518,7 +518,7 @@ class DefsWriter:
         self._write_arguments(args)
 
     def _write_method(self, obj, name, ret, args):
-        regex = string.join(map(lambda x: x+'_?', string.lower(obj)),'')
+        regex = string.join([x+'_?' for x in string.lower(obj)],'')
         mname = re.sub(regex, '', name, 1)
         if self.prefix:
             l = len(self.prefix) + 1
@@ -587,7 +587,7 @@ def main(args):
             defsfilter = v
 
     if not args[0:1]:
-        print 'Must specify at least one input file name'
+        print('Must specify at least one input file name')
         return -1
 
     # read all the object definitions in
@@ -607,11 +607,11 @@ def main(args):
                         verbose=verbose, defsfilter=defsfilter)
         dw.write_obj_defs(objdefs, types)
         dw.write_enum_defs(enums, types)
-        print "Wrote %s-types.defs" % separate
+        print("Wrote %s-types.defs" % separate)
 
         for filename in args:
             dw.write_def(filename)
-        print "Wrote %s.defs" % separate
+        print("Wrote %s.defs" % separate)
     else:
         dw = DefsWriter(prefix=modulename, ns=namespace,
                         verbose=verbose, defsfilter=defsfilter)

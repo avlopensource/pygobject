@@ -21,7 +21,7 @@ def main():
                 continue
             params = []
             if not m[2]:
-                print >> sys.stderr, repr(m)
+                print(repr(m), file=sys.stderr)
                 continue
             for param in map(str.strip, m[2].split(',')):
                 if '*' in param:
@@ -31,7 +31,7 @@ def main():
                 else:
                     if param == 'void':
                         continue
-                    ptype, pname = map(str.strip, param.split())
+                    ptype, pname = list(map(str.strip, param.split()))
                 ptype = ptype.replace('const ', 'const-')
                 while '[]' in pname:
                     pname = pname.replace('[]', '')
@@ -40,15 +40,15 @@ def main():
             if not params:
                 continue
             objname = params[0][0].replace('*', '')
-            print '(define-virtual', virtual_name
-            print '  (of-object "%s")' % objname
-            print '  (return-type "%s")' % return_type
+            print('(define-virtual', virtual_name)
+            print('  (of-object "%s")' % objname)
+            print('  (return-type "%s")' % return_type)
             if len(params) > 1:
-                print '  (parameters'
+                print('  (parameters')
                 for param in params[1:]:
-                    print '    \'("%s" "%s")' % param
-                print '  )'
-            print ')'
+                    print('    \'("%s" "%s")' % param)
+                print('  )')
+            print(')')
 
 if __name__ == '__main__':
     main()

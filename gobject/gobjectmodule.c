@@ -2367,6 +2367,7 @@ disable_warning_redirections(void)
 /* ----------------- gobject module initialisation -------------- */
 
 struct _PyGObject_Functions pygobject_api_functions = {
+  pygobject_register_heap_class,
   pygobject_register_class,
   pygobject_register_wrapper,
   pygobject_register_sinkfunc,

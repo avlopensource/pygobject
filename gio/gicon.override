@@ -177,13 +177,13 @@ _wrap_g_file_icon_tp_repr(PyGObject *self)
     PyObject *result;
 
     if (uri) {
-	representation = g_strdup_printf("<%s at %p: %s>", self->ob_type->tp_name, self, uri);
+	representation = g_strdup_printf("<%s at %p: %s>", Py_TYPE(self)->tp_name, self, uri);
 	g_free(uri);
     }
     else
-	representation = g_strdup_printf("<%s at %p: UNKNOWN URI>", self->ob_type->tp_name, self);
+	representation = g_strdup_printf("<%s at %p: UNKNOWN URI>", Py_TYPE(self)->tp_name, self);
 
-    result = PyString_FromString(representation);
+    result = PyUnicode_FromString(representation);
     g_free(representation);
     return result;
 }
@@ -202,9 +202,9 @@ _wrap_g_themed_icon_new(PyGObject *self, PyObject *args, PyObject *kwargs)
 				     kwlist, &name, &use_default_fallbacks))
 	return -1;
 
-    if (PyString_Check(name)) {
+    if (PyUnicode_Check(name)) {
 	pygobject_construct(self,
-			    "name", PyString_AsString(name),
+			    "name", PyUnicode_AsUTF8(name),
 			    "use-default-fallbacks", use_default_fallbacks, NULL);
 	return 0;
     }
@@ -218,8 +218,8 @@ _wrap_g_themed_icon_new(PyGObject *self, PyObject *args, PyObject *kwargs)
 
 	    for (k = 0; k < length; k++) {
 		PyObject *str = PyTuple_GetItem(tuple, k);
-		if (str && PyString_Check(str))
-		    names[k] = PyString_AsString(str);
+		if (str && PyUnicode_Check(str))
+		    names[k] = PyUnicode_AsUTF8(str);
 		else {
 		    Py_DECREF(tuple);
 		    g_free(names);
@@ -257,7 +257,7 @@ _wrap_g_themed_icon_get_names(PyGObject *self)
 
     ret = PyList_New(0);
     while (names && *names) {
-        PyObject *item = PyString_FromString(names[0]);
+        PyObject *item = PyUnicode_FromString(names[0]);
         PyList_Append(ret, item);
         Py_DECREF(item);
 
@@ -275,7 +275,7 @@ _wrap_g_themed_icon_tp_repr(PyGObject *self)
     GString *representation = g_string_new(NULL);
     PyObject *result;
 
-    g_string_append_printf(representation, "<%s at %p: ", self->ob_type->tp_name, self);
+    g_string_append_printf(representation, "<%s at %p: ", Py_TYPE(self)->tp_name, self);
 
     if (names) {
 	gboolean first_name = TRUE;
@@ -290,7 +290,7 @@ _wrap_g_themed_icon_tp_repr(PyGObject *self)
     }
 
     g_string_append(representation, ">");
-    result = PyString_FromString(representation->str);
+    result = PyUnicode_FromString(representation->str);
     g_string_free(representation, TRUE);
     return result;
 }

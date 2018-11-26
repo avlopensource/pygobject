@@ -20,8 +20,8 @@
 # USA
 
 from gobject import GObjectMeta
-from _gio import *
-from _gio import \
+from ._gio import *
+from ._gio import \
      _app_info_init, _install_app_info_meta, \
      _file_init, _install_file_meta
 try:

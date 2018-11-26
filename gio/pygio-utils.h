@@ -28,8 +28,10 @@
 #include <pygobject.h>
 #include <gio/gio.h>
 
-extern PyTypeObject PyGCancellable_Type;
-extern PyTypeObject PyGAppLaunchContext_Type;
+extern PyTypeObject *_PyGCancellable_Type;
+#define PyGCancellable_Type (*_PyGCancellable_Type)
+extern PyTypeObject *_PyGAppLaunchContext_Type;
+#define PyGAppLaunchContext_Type (*_PyGAppLaunchContext_Type)
 extern PyTypeObject PyGFile_Type;
 
 gboolean pygio_check_cancellable(PyGObject *pycancellable,

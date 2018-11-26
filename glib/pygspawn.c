@@ -67,8 +67,11 @@ pyg_pid_new(GPid pid)
     PYGLIB_PyLongObject *pygpid;
 
 #if PY_VERSION_HEX >= 0x03000000
-    return PyObject_CallMethod((PyObject*)&PyGPid_Type, "__new__", "Oi",
-		               &PyGPid_Type, pid);
+    PyObject *item;
+    PyObject *args = Py_BuildValue("(N)", PyLong_FromLong(pid));
+    item = PyLong_Type.tp_new(&PyGPid_Type, args, NULL);
+    Py_DECREF(args);
+    return item;
 #else
     pygpid = PyObject_NEW(PyIntObject, &PyGPid_Type);
     pygpid->ob_ival = pid;
