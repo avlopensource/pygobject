@@ -14,11 +14,11 @@ string.split = lambda s, *a: s.split(*a)
 string.count = lambda s, *a: s.count(*a)
 string.lower = lambda s: s.lower()
 
-from . import argtypes
-from . import definitions
-from . import defsparser
-from . import override
-from . import reversewrapper
+import argtypes
+import definitions
+import defsparser
+import override
+import reversewrapper
 import warnings
 
 class Coverage(object):

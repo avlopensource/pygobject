@@ -1,7 +1,7 @@
 # -*- Mode: Python; py-indent-offset: 4 -*-
 import os, sys
-from . import scmexpr
-from .definitions import BoxedDef, EnumDef, FlagsDef, FunctionDef, \
+import scmexpr
+from definitions import BoxedDef, EnumDef, FlagsDef, FunctionDef, \
      InterfaceDef, MethodDef, ObjectDef, PointerDef, VirtualDef
 
 include_path = ['.']

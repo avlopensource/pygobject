@@ -1,7 +1,7 @@
 ### -*- python -*-
 ### Code to generate "Reverse Wrappers", i.e. C->Python wrappers
 ### (C) 2004 Gustavo Carneiro <gjc@gnome.org>
-from . import argtypes
+import argtypes
 import os
 
 DEBUG_MODE = ('PYGTK_CODEGEN_DEBUG' in os.environ)
