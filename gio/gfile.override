@@ -87,10 +87,19 @@ _wrap__file_init(PyGObject *self, PyObject *args, PyObject *kwargs)
     } else if (n_args == 0 && n_kwargs == 1) {
 	if (PyDict_GetItemString(kwargs, "path")) {
 	    char *kwlist[] = { "path", NULL };
+#ifdef G_OS_WIN32
 	    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
 					     "s:gio.File.__init__", kwlist, &arg))
 		return NULL;
 	    file = g_file_new_for_path(arg);
+#else
+            PyObject *byte_path;
+            if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O&:gio.File.__init__",
+                                             kwlist, PyUnicode_FSConverter, &byte_path))
+                return NULL;
+            file = g_file_new_for_path(PyBytes_AsString(byte_path));
+            Py_DECREF(byte_path);
+#endif
 	} else if (PyDict_GetItemString(kwargs, "uri")) {
 	    char *kwlist[] = { "uri", NULL };
 	    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
@@ -204,7 +213,7 @@ _wrap_g_file_load_contents(PyGObject *self,
     if (ret) {
         PyObject *pyret;
 
-        pyret = Py_BuildValue("(s#ks)", contents, length, length, etag_out);
+        pyret = Py_BuildValue("(y#ks)", contents, length, length, etag_out);
         g_free(contents);
 	g_free(etag_out);
         return pyret;
@@ -286,7 +295,7 @@ _wrap_g_file_load_contents_finish(PyGObject *self,
     if (ret) {
         PyObject *pyret;
 
-        pyret = Py_BuildValue("(s#ks)", contents, length, length, etag_out);
+        pyret = Py_BuildValue("(y#ks)", contents, length, length, etag_out);
         g_free(contents);
 	g_free(etag_out);
         return pyret;
@@ -1629,7 +1638,7 @@ _wrap_g_file_replace_contents_async(PyGObject *self, PyObject *args, PyObject *k
     notify = pygio_notify_new();
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     "s#O|zbOOO:File.replace_contents_async",
+                                     "y#O|zbOOO:File.replace_contents_async",
                                       kwlist,
                                       &contents,
                                       &length,
