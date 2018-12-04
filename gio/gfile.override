@@ -213,7 +213,7 @@ _wrap_g_file_load_contents(PyGObject *self,
     if (ret) {
         PyObject *pyret;
 
-        pyret = Py_BuildValue("(y#ks)", contents, length, length, etag_out);
+        pyret = Py_BuildValue("(y#ks)", contents, (Py_ssize_t)length, (unsigned long)length, etag_out);
         g_free(contents);
 	g_free(etag_out);
         return pyret;
@@ -295,7 +295,7 @@ _wrap_g_file_load_contents_finish(PyGObject *self,
     if (ret) {
         PyObject *pyret;
 
-        pyret = Py_BuildValue("(y#ks)", contents, length, length, etag_out);
+        pyret = Py_BuildValue("(y#ks)", contents, (Py_ssize_t)length, (unsigned long)length, etag_out);
         g_free(contents);
 	g_free(etag_out);
         return pyret;
@@ -1531,11 +1531,7 @@ _wrap_g_file_replace_contents(PyGObject *self, PyObject *args, PyObject *kwargs)
     PyGObject *pycancellable = NULL;
     GFileCreateFlags flags = G_FILE_CREATE_NONE;
     PyObject *py_flags = NULL;
-#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t length;
-#else
-    int length;
-#endif
     gboolean make_backup = FALSE;
     char *contents;
     char *etag = NULL;
@@ -1634,11 +1630,7 @@ _wrap_g_file_replace_contents_async(PyGObject *self, PyObject *args, PyObject *k
     PyGIONotify *notify;
     GFileCreateFlags flags = G_FILE_CREATE_NONE;
     PyObject *py_flags = NULL;
-#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t length;
-#else
-    int length;
-#endif
     gboolean make_backup = FALSE;
     char *contents;
     char *etag = NULL;

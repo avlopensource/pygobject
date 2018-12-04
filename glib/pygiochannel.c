@@ -261,11 +261,7 @@ py_io_channel_write_chars(PyGIOChannel* self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "buf", NULL };
     const char* buf;
-#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t buf_len;
-#else
-    int buf_len;
-#endif
     gsize count;
     GError* error = NULL;
     GIOStatus status;

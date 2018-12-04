@@ -25,6 +25,10 @@
 #  include <config.h>
 #endif
 
+#ifndef PY_SSIZE_T_CLEAN
+#error PY_SSIZE_T_CLEAN must be defined
+#endif
+
 #include <Python.h>
 #include <glib.h>
 #include "pyglib.h"
@@ -393,11 +397,7 @@ pyglib_markup_escape_text(PyObject *unused, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "text", NULL };
     char *text_in, *text_out;
-#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t text_size;
-#else
-    int text_size;
-#endif
     PyObject *retval;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
@@ -514,11 +514,7 @@ static PyObject *
 pyglib_filename_from_utf8(PyObject *self, PyObject *args)
 {
     char *filename, *utf8string;
-#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t utf8string_len;
-#else
-    int utf8string_len;
-#endif
     gsize bytes_written;
     GError *error = NULL;
     PyObject *py_filename;

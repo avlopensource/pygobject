@@ -22,6 +22,11 @@
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
+
+#ifndef PY_SSIZE_T_CLEAN
+#error PY_SSIZE_T_CLEAN must be defined
+#endif
+
 #include <Python.h>
 #include <pyglib.h>
 #include <pygobject.h>
