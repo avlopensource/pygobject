@@ -57,7 +57,8 @@ GLOBAL_INC += ['gobject']
 GLOBAL_MACROS += [('PYGOBJECT_MAJOR_VERSION', MAJOR_VERSION),
                   ('PYGOBJECT_MINOR_VERSION', MINOR_VERSION),
                   ('PYGOBJECT_MICRO_VERSION', MICRO_VERSION),
-                  ('VERSION', '\\"%s\\"' % VERSION)]
+                  ('VERSION', '\\"%s\\"' % VERSION),
+                  ('PY_SSIZE_T_CLEAN', '1')]
 
 BIN_DIR     = os.path.join('Scripts')
 INCLUDE_DIR = os.path.join('include', 'pygtk-%s' % PYGTK_SUFFIX)

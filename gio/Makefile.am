@@ -7,7 +7,8 @@ AM_CPPFLAGS = 				\
 	-I$(top_srcdir)/gobject		\
 	$(PYTHON_INCLUDES) 		\
 	$(PYGOBJECT_CFLAGS)		\
-	$(GIO_CFLAGS)
+	$(GIO_CFLAGS)			\
+	-DPY_SSIZE_T_CLEAN
 
 # defs files
 defsdir = $(pkgdatadir)/$(PLATFORM_VERSION)/defs

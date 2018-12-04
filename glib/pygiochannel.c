@@ -261,12 +261,16 @@ py_io_channel_write_chars(PyGIOChannel* self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "buf", NULL };
     const char* buf;
+#ifdef PY_SSIZE_T_CLEAN
     Py_ssize_t buf_len;
+#else
+    int buf_len;
+#endif
     gsize count;
     GError* error = NULL;
     GIOStatus status;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#:glib.IOChannel.write",
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "y#:glib.IOChannel.write",
                                      kwlist, &buf, &buf_len))
         return NULL;
 	
