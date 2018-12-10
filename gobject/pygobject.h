@@ -202,6 +202,7 @@ struct _PyGObject_Functions {
     PyObject* (*option_group_new) (GOptionGroup *group);
     GType (* type_from_object_strict) (PyObject *obj, gboolean strict);    
 
+    char* (*pystr_to_gfilename) (PyObject *py_obj);
     int (*pystr_to_gfilename_conv) (PyObject *py_obj, void *ptr);
     PyObject* (*pystr_from_gfilename) (const char *);
 };
@@ -273,6 +274,7 @@ struct _PyGObject_Functions *_PyGObject_API;
 #define pyg_type_register_custom_callback (_PyGObject_API->type_register_custom)
 #define pyg_gerror_exception_check (_PyGObject_API->gerror_exception_check)
 #define pyg_option_group_new       (_PyGObject_API->option_group_new)
+#define pyg_pystr_to_gfilename (_PyGObject_API->pystr_to_gfilename)
 #define pyg_pystr_to_gfilename_conv (_PyGObject_API->pystr_to_gfilename_conv)
 #define pyg_pystr_from_gfilename (_PyGObject_API->pystr_from_gfilename)
 

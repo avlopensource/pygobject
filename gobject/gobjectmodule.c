@@ -2449,6 +2449,7 @@ struct _PyGObject_Functions pygobject_api_functions = {
   pyglib_option_group_new,
   pyg_type_from_object_strict,
 
+  pyglib_pystr_to_gfilename,
   pyglib_pystr_to_gfilename_conv,
   pyglib_pystr_from_gfilename,
 };

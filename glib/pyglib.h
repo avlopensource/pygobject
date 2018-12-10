@@ -51,6 +51,7 @@ PyObject * pyglib_option_group_new(GOptionGroup *group);
 GOptionGroup * pyglib_option_group_transfer_group(PyObject *self);
 PyObject * pyglib_float_from_timeval(GTimeVal timeval);
 
+gchar *pyglib_pystr_to_gfilename(PyObject *py_obj);
 int pyglib_pystr_to_gfilename_conv(PyObject *py_obj, void *ptr);
 PyObject *pyglib_pystr_from_gfilename(const gchar *filename);
 

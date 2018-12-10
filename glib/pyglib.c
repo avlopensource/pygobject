@@ -493,7 +493,7 @@ pyglib_float_from_timeval(GTimeVal timeval)
 }
 
 /**
- * pyglib_pystr_to_gfilename_conv:
+ * pyg_pystr_to_gfilename_conv:
  *
  * Converts PyObject value to a gchar * in GLib filename encoding. Follows the
  * calling convention of a ParseArgs converter (O& format specifier) so it may
@@ -534,6 +534,22 @@ int pyglib_pystr_to_gfilename_conv(PyObject *py_obj, void *ptr)
     *filename = g_strdup(PyString_AS_STRING(py_obj));
 #endif /* PY_MAJOR_VERSION >= 3 */
     return 1;
+}
+
+/**
+ * pyg_pystr_to_gfilename:
+ *
+ * Converts PyObject value to a gchar * in GLib filename encoding.
+ *
+ * Returns: gchar * if the conversion succeeds and NULL otherwise.The caller is
+ * needs to call g_free on the returned value when finished.
+ */
+gchar *
+pyglib_pystr_to_gfilename(PyObject *py_obj)
+{
+    gchar *value = NULL;
+    pyglib_pystr_to_gfilename_conv(py_obj, &value);
+    return value;
 }
 
 PyObject *
