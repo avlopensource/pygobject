@@ -127,19 +127,33 @@ class FilenameArg(ArgType):
     def write_param(self, ptype, pname, pdflt, pnull, info):
         if pdflt is not None:
             if pdflt != 'NULL': pdflt = '"' + pdflt + '"'
+            if pnull:
+                info.varlist.add('PyObject', '*py_' + pname)
             info.varlist.add('char', '*' + pname + ' = ' + pdflt)
         else:
+            if pnull:
+                info.varlist.add('PyObject', '*py_' + pname)
             info.varlist.add('char', '*' + pname)
         info.arglist.append(pname)
-        assert not pnull
-        info.add_parselist('O&', ['pyglib_pystr_to_gfilename_conv', '&' + pname], [pname])
+        if pnull:
+            info.add_parselist('O', ['&py_' + pname], [pname])
+            info.codebefore.append('    if (py_%(pname)s == Py_None) {\n'
+                                   '        %(pname)s = NULL; \n'
+                                   '    } else {\n'
+                                   '        if (!pyg_pystr_to_gfilename_conv(py_%(pname)s, &%(pname)s)) {\n'
+                                   '            return NULL;\n'
+                                   '        }\n'
+                                   '    }\n' % dict(pname=pname))
+        else:
+            info.add_parselist('O&', ['pyg_pystr_to_gfilename_conv', '&' + pname], [pname])
         info.codeafter.append('    g_free(%s);\n' % pname)
+
     def write_return(self, ptype, ownsreturn, info):
         if ownsreturn:
             # have to free result ...
             info.varlist.add('gchar', '*ret')
             info.codeafter.append('    if (ret) {\n' +
-                                  '        PyObject *py_ret = pyglib_pystr_from_gfilename(ret);\n' +
+                                  '        PyObject *py_ret = pyg_pystr_from_gfilename(ret);\n' +
                                   '        g_free(ret);\n' +
                                   '        return py_ret;\n' +
                                   '    }\n' +
@@ -148,7 +162,7 @@ class FilenameArg(ArgType):
         else:
             info.varlist.add('const gchar', '*ret')
             info.codeafter.append('    if (ret)\n' +
-                                  '        return pyglib_pystr_from_gfilename(ret);\n'+
+                                  '        return pyg_pystr_from_gfilename(ret);\n'+
                                   '    Py_INCREF(Py_None);\n' +
                                   '    return Py_None;')
 
