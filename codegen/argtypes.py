@@ -123,6 +123,35 @@ class StringArg(ArgType):
                                   '    Py_INCREF(Py_None);\n' +
                                   '    return Py_None;')
 
+class FilenameArg(ArgType):
+    def write_param(self, ptype, pname, pdflt, pnull, info):
+        if pdflt is not None:
+            if pdflt != 'NULL': pdflt = '"' + pdflt + '"'
+            info.varlist.add('char', '*' + pname + ' = ' + pdflt)
+        else:
+            info.varlist.add('char', '*' + pname)
+        info.arglist.append(pname)
+        assert not pnull
+        info.add_parselist('O&', ['pyglib_pystr_to_gfilename_conv', '&' + pname], [pname])
+        info.codeafter.append('    g_free(%s);\n' % pname)
+    def write_return(self, ptype, ownsreturn, info):
+        if ownsreturn:
+            # have to free result ...
+            info.varlist.add('gchar', '*ret')
+            info.codeafter.append('    if (ret) {\n' +
+                                  '        PyObject *py_ret = pyglib_pystr_from_gfilename(ret);\n' +
+                                  '        g_free(ret);\n' +
+                                  '        return py_ret;\n' +
+                                  '    }\n' +
+                                  '    Py_INCREF(Py_None);\n' +
+                                  '    return Py_None;')
+        else:
+            info.varlist.add('const gchar', '*ret')
+            info.codeafter.append('    if (ret)\n' +
+                                  '        return pyglib_pystr_from_gfilename(ret);\n'+
+                                  '    Py_INCREF(Py_None);\n' +
+                                  '    return Py_None;')
+
 class UCharArg(ArgType):
     # allows strings with embedded NULLs.
     def write_param(self, ptype, pname, pdflt, pnull, info):
@@ -948,6 +977,9 @@ matcher.register('const-gchar*', arg)
 matcher.register('gchar-const*', arg)
 matcher.register('string', arg)
 matcher.register('static_string', arg)
+
+arg = FilenameArg()
+matcher.register('filename_t', arg)
 
 arg = UCharArg()
 matcher.register('unsigned-char*', arg)

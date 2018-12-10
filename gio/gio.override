@@ -336,9 +336,9 @@ _wrap_g_content_type_guess(PyGObject *self, PyObject *args, PyObject *kwargs)
     PyObject *ret;
 
     if (!PyArg_ParseTupleAndKeywords (args, kwargs,
-				      "|zy#i:g_content_type_guess",
+				      "|O&y#i:g_content_type_guess",
 				      kwlist,
-				      &filename, &data, &data_size,
+				      pyglib_pystr_to_gfilename_conv, &filename, &data, &data_size,
 				      &want_uncertain))
       return NULL;
 
@@ -358,6 +358,7 @@ _wrap_g_content_type_guess(PyGObject *self, PyObject *args, PyObject *kwargs)
     }
 
     g_free(type);
+    g_free(filename);
     return ret;
 }
 %%

@@ -1738,7 +1738,7 @@
   (return-type "GFile*")
   (caller-owns-return #t)
   (parameters
-    '("const-char*" "relative_path")
+    '("filename_t" "relative_path")
   )
 )
 
@@ -2439,7 +2439,7 @@
   (return-type "gboolean")
   (unblock-threads #t)
   (parameters
-    '("const-char*" "symlink_value")
+    '("filename_t" "symlink_value")
     '("GCancellable*" "cancellable" (null-ok) (default "NULL"))
     '("GError**" "error")
   )

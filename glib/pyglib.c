@@ -492,6 +492,66 @@ pyglib_float_from_timeval(GTimeVal timeval)
     return PyFloat_FromDouble(ret);
 }
 
+/**
+ * pyglib_pystr_to_gfilename_conv:
+ *
+ * Converts PyObject value to a gchar * in GLib filename encoding. Follows the
+ * calling convention of a ParseArgs converter (O& format specifier) so it may
+ * be used to convert function arguments.
+ *
+ * Returns: 1 if the conversion succeeds and 0 otherwise.  If the conversion
+ *          did not succeesd, a Python exception is raised
+ */
+int pyglib_pystr_to_gfilename_conv(PyObject *py_obj, void *ptr)
+{
+    gchar **filename = ptr;
+    gchar *tmp;
+#if PY_MAJOR_VERSION >= 3
+    if (!PyUnicode_Check(py_obj)) {
+        PyErr_SetString(PyExc_ValueError, "filename must be a string");
+        return 0;
+    }
+#if defined(G_OS_WIN32)
+    tmp = g_strdup(PyUnicode_AsUTF8(py_obj));
+    if (tmp == NULL)
+        return 0;
+    *filename = tmp;
+#else
+    {
+        PyObject *filename_bytes;
+        if (!PyUnicode_FSConverter(py_obj, &filename_bytes))
+            return 0;
+        *filename = g_strdup(PyBytes_AS_STRING(filename_bytes));
+        Py_DECREF(filename_bytes);
+    }
+#endif /* defined(G_OS_WIN32) */
+
+#else /* PY_MAJOR_VERSION < 3 */
+    if (!PyString_Check(py_obj)) {
+        PyErr_SetString(PyExc_ValueError, "filename must be a string");
+        return 0;
+    }
+    *filename = g_strdup(PyString_AS_STRING(py_obj));
+#endif /* PY_MAJOR_VERSION >= 3 */
+    return 1;
+}
+
+PyObject *
+pyglib_pystr_from_gfilename(const gchar *filename)
+{
+#if PY_MAJOR_VERSION >= 3
+
+#if defined(G_OS_WIN32)
+    return PyUnicode_FromString(filename);
+#else
+    return PyUnicode_DecodeFSDefault(filename);
+#endif /* defined(G_OS_WIN32) */
+
+#else
+    return PYGLIB_PyString_FromString(filename);
+#endif /* PY_MAJOR_VERSION >= 3 */
+}
+
 
 /****** Private *****/
 

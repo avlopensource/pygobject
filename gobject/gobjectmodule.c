@@ -2447,7 +2447,7 @@ struct _PyGObject_Functions pygobject_api_functions = {
   pyg_gerror_exception_check,
 
   pyglib_option_group_new,
-  pyg_type_from_object_strict
+  pyg_type_from_object_strict,
 };
 
 /* for addon libraries ... */

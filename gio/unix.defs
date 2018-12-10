@@ -43,7 +43,7 @@
   (c-name "g_desktop_app_info_new_from_filename")
   (return-type "GDesktopAppInfo*")
   (parameters
-    '("const-char*" "filename")
+    '("filename_t" "filename")
   )
 )
 

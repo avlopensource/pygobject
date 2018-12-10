@@ -271,6 +271,7 @@ struct _PyGObject_Functions *_PyGObject_API;
 #define pyg_gerror_exception_check (_PyGObject_API->gerror_exception_check)
 #define pyg_option_group_new       (_PyGObject_API->option_group_new)
 
+
 #define pyg_block_threads()   G_STMT_START {   \
     if (_PyGObject_API->block_threads != NULL) \
       (* _PyGObject_API->block_threads)();     \
