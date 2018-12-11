@@ -181,6 +181,7 @@ py_modules += ['gobject.__init__', 'gobject.propertyhelper', 'gobject.constants'
 
 ext_modules.append(gio)
 py_modules += ['gio.__init__']
+data_files.append((DEFS_DIR, ('gio/gio.defs', 'gio/gio-types.defs',)))
 
 # Threading support
 if '--disable-threading' in sys.argv:
