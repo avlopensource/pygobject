@@ -1138,14 +1138,16 @@ pygobject_traverse(PyGObject *self, visitproc visit, void *arg)
         for (tmp = data->closures; tmp != NULL; tmp = tmp->next) {
             PyGClosure *closure = tmp->data;
 
-            if (closure->callback) ret = visit(closure->callback, arg);
-            if (ret != 0) return ret;
+            if (self->obj->ref_count == 1) {
+                if (closure->callback) ret = visit(closure->callback, arg);
+                if (ret != 0) return ret;
 
-            if (closure->extra_args) ret = visit(closure->extra_args, arg);
-            if (ret != 0) return ret;
+                if (closure->extra_args) ret = visit(closure->extra_args, arg);
+                if (ret != 0) return ret;
 
-            if (closure->swap_data) ret = visit(closure->swap_data, arg);
-            if (ret != 0) return ret;
+                if (closure->swap_data) ret = visit(closure->swap_data, arg);
+                if (ret != 0) return ret;
+            }
         }
     }
     return ret;
