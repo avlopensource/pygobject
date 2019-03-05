@@ -193,7 +193,7 @@ typedef struct {
 
 extern PyTypeObject PyGFlags_Type;
 
-#define PyGFlags_Check(x) (g_type_is_a(((PyGFlags*)x)->gtype, G_TYPE_FLAGS))
+#define PyGFlags_Check(x) (PyObject_TypeCheck(x, &PyGFlags_Type) && g_type_is_a(((PyGFlags*)x)->gtype, G_TYPE_FLAGS))
 
 extern PyObject * pyg_flags_add        (PyObject *   module,
 					const char * type_name,
