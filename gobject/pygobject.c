@@ -489,7 +489,10 @@ pygobject_register_heap_class(PyObject *dict, const gchar *type_name,
                               PyObject *static_bases)
 {
     PyHeapTypeObject *res = (PyHeapTypeObject *)PyType_GenericAlloc(PyGObject_MetaType, 0);
-    res->ht_type = *type_template;
+    /* Copy all fields after PyObject_VAR_HEAD from type_template */
+    memcpy(((char *)res) + offsetof(PyTypeObject, tp_name),
+           ((char *)type_template) + offsetof(PyTypeObject, tp_name),
+           sizeof(*type_template) - offsetof(PyTypeObject, tp_name));
     res->ht_type.tp_flags |= Py_TPFLAGS_HEAPTYPE;
 
     res->ht_name = PyUnicode_FromString(type_template->tp_name);
