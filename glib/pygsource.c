@@ -259,7 +259,7 @@ static PyMethodDef pyg_source_methods[] = {
     { "destroy", (PyCFunction)pyg_source_destroy, METH_NOARGS },
     { "set_callback", (PyCFunction)pyg_source_set_callback, METH_VARARGS },
     { "get_context", (PyCFunction)pyg_source_get_context, METH_NOARGS },
-    { "add_poll", (PyCFunction)pyg_source_add_poll, METH_KEYWORDS },
+    { "add_poll", (PyCFunction)pyg_source_add_poll, METH_VARARGS | METH_KEYWORDS },
     { "remove_poll", (PyCFunction)pyg_source_remove_poll, METH_VARARGS|METH_KEYWORDS },
     { "get_current_time", (PyCFunction)pyg_source_get_current_time, METH_NOARGS },
     { NULL, NULL, 0 }
