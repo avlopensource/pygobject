@@ -843,8 +843,7 @@ pygobject_inherit_slots(PyTypeObject *type, PyObject *bases, gboolean check_for_
                                   offsetof(PyTypeObject, tp_hash),
                                   offsetof(PyTypeObject, tp_iter),
                                   offsetof(PyTypeObject, tp_repr),
-                                  offsetof(PyTypeObject, tp_str),
-                                  offsetof(PyTypeObject, tp_print) };
+                                  offsetof(PyTypeObject, tp_str) };
     int i;
 
     /* Happens when registering gobject.GObject itself, at least. */
