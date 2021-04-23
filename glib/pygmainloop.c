@@ -72,7 +72,11 @@ pyg_get_current_main_loop (void)
 }
 #else /* !defined(#ifndef DISABLE_THREADING) */
 
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+static Py_tss_t pyg_current_main_loop_key = Py_tss_NEEDS_INIT;
+#else /* pyversion < 3.7 */
 static int pyg_current_main_loop_key = -1;
+#endif
 
 static inline GMainLoop *
 pyg_save_current_main_loop (GMainLoop *main_loop)
@@ -81,6 +85,11 @@ pyg_save_current_main_loop (GMainLoop *main_loop)
 
     g_return_val_if_fail(main_loop != NULL, NULL);
 
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+    PyThread_tss_create(&pyg_current_main_loop_key);
+    retval = PyThread_tss_get(&pyg_current_main_loop_key);
+    PyThread_tss_set(&pyg_current_main_loop_key, g_main_loop_ref(main_loop));
+#else
     if (pyg_current_main_loop_key == -1)
 	pyg_current_main_loop_key = PyThread_create_key();
 
@@ -88,6 +97,7 @@ pyg_save_current_main_loop (GMainLoop *main_loop)
     PyThread_delete_key_value(pyg_current_main_loop_key);
     PyThread_set_key_value(pyg_current_main_loop_key, 
 			   g_main_loop_ref(main_loop));
+#endif
 
     return retval;
 }
@@ -97,6 +107,16 @@ pyg_restore_current_main_loop (GMainLoop *main_loop)
 {
     GMainLoop *prev;
 
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+    g_return_if_fail (PyThread_tss_is_created(&pyg_current_main_loop_key));
+    prev = PyThread_tss_get(&pyg_current_main_loop_key);
+    if (prev != NULL)
+        g_main_loop_unref(prev);
+    if (main_loop != NULL)
+        PyThread_tss_set(&pyg_current_main_loop_key, main_loop);
+    else
+        PyThread_tss_set(&pyg_current_main_loop_key, NULL);
+#else /* pyversion < 3.7 */
     g_return_if_fail (pyg_current_main_loop_key != -1);
 
     prev = PyThread_get_key_value(pyg_current_main_loop_key);
@@ -105,14 +125,21 @@ pyg_restore_current_main_loop (GMainLoop *main_loop)
     PyThread_delete_key_value(pyg_current_main_loop_key);
     if (main_loop != NULL)
 	PyThread_set_key_value(pyg_current_main_loop_key, main_loop);
+#endif
 }
 
 static inline GMainLoop *
 pyg_get_current_main_loop (void)
 {
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 7
+    if (!PyThread_tss_is_created(&pyg_current_main_loop_key))
+        return NULL;
+    return PyThread_tss_get(&pyg_current_main_loop_key);
+#else /* pyversion < 3.7 */
     if (pyg_current_main_loop_key == -1)
 	return NULL;
     return PyThread_get_key_value(pyg_current_main_loop_key);
+#endif
 }
 #endif /* DISABLE_THREADING */
 
